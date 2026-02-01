@@ -26,6 +26,8 @@ services:
     environment:
       DATABASE_URL: postgresql://user:password@postgres:5432/dating_db
       API_URL: http://api:8000
+      SUPERADMIN_LOGIN: ${SUPERADMIN_LOGIN:-admin}
+      SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-admin}
     depends_on:
       postgres:
         condition: service_healthy
