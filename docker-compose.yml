@@ -15,6 +15,19 @@ services:
       timeout: 5s
       retries: 5
 
+  db-init:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/dating_db
+    command: ["alembic", "upgrade", "head"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+
   api:
     build:
       context: ./backend
@@ -29,8 +42,8 @@ services:
       SUPERADMIN_LOGIN: ${SUPERADMIN_LOGIN:-admin}
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-admin}
     depends_on:
-      postgres:
-        condition: service_healthy
+      db-init:
+        condition: service_completed_successfully
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 10s
@@ -48,6 +61,7 @@ services:
       API_URL: http://api:8000
       DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
       SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
+      POLL_INTERVAL_SEC: ${POLL_INTERVAL_SEC:-1}
     depends_on:
       api:
         condition: service_healthy
