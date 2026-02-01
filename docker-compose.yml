@@ -63,10 +63,24 @@ services:
       API_URL: http://api:8000
       DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
       SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
-      POLL_INTERVAL_SEC: ${POLL_INTERVAL_SEC:-1}
     depends_on:
       api:
         condition: service_healthy
+
+  expiration-service:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      EXPIRATION_CHECK_INTERVAL_SEC: ${EXPIRATION_CHECK_INTERVAL_SEC:-3600}
+    command: ["python", "scripts/run_expiration.py"]
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
 
   frontend:
     build:
