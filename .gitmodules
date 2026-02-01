@@ -4,3 +4,6 @@
 [submodule "bot"]
 	path = bot
 	url = https://github.com/KroJIak/love-swipe-telegram-bot.git
+[submodule "frontend"]
+	path = frontend
+	url = https://github.com/KroJIak/love-swipe-frontend.git
