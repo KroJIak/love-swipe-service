@@ -32,6 +32,8 @@ services:
       - .env
     environment:
       API_URL: http://api:8000
+      DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
+      SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
     depends_on:
       - api
 
@@ -39,10 +41,16 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:10401
+        VITE_DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
+        VITE_SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
     ports:
       - "${FRONTEND_PORT:-10402}:4173"
     environment:
       VITE_API_URL: http://localhost:10401
+      VITE_DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
+      VITE_SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
     depends_on:
       - api
 
