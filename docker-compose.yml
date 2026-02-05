@@ -1,3 +1,5 @@
+name: tribe-search
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -54,6 +56,9 @@ services:
       API_URL: http://api:8000
       SUPERADMIN_LOGIN: ${SUPERADMIN_LOGIN:-admin}
       SUPERADMIN_PASSWORD: ${SUPERADMIN_PASSWORD:-admin}
+      BOT_API_URL: http://bot:8002
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       db-init:
         condition: service_completed_successfully
@@ -75,6 +80,9 @@ services:
       REDIS_URL: redis://redis:6379/0
       DEFAULT_LOCALE: ${DEFAULT_LOCALE:-ru_RU}
       SUPPORTED_LOCALES: ${SUPPORTED_LOCALES:-ru_RU,en_US}
+      API_SERVER_PORT: 8002
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       api:
         condition: service_healthy
@@ -116,3 +124,4 @@ services:
 
 volumes:
   postgres_data:
+  uploads_data:
